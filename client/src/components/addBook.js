@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { graphql } from 'react-apollo'; // Compose no longer in Apollo 3, was copy of lodash's flowright anyway according to docs and stackE https://stackoverflow.com/questions/57445294/compose-not-exported-from-react-apollo
 import { flowRight as compose } from 'lodash';
-import { getAuthorsQuery, addBookMutation } from '../queries/queries';
+import { getAuthorsQuery, addBookMutation, getBooksQuery } from '../queries/queries';
 
 
 const AddBook = (props) => {
@@ -35,7 +35,8 @@ const AddBook = (props) => {
         name: name,
         genre: genre,
         authorId: authorId
-      }
+      },
+      refetchQueries: [{ query: getBooksQuery}]
     });
   }
      
