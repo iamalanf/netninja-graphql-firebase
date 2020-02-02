@@ -1,13 +1,11 @@
 const admin = require('firebase-admin');
-
 const graphql = require('graphql');
-// const Book = require('../models/book'); // COuld use typescript?
-// const Author = require('../models/Author');
 const _ = require('lodash');
-
 
 const serviceAccount = require('../../firebase_key.json');
 
+// Get the following from firebase console > project settings > service accounts > download json key
+// See README for more details
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://fir-netninja-graphql.firebaseio.com"
