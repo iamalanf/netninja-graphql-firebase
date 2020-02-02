@@ -1,7 +1,7 @@
 const admin = require('firebase-admin');
 
 const graphql = require('graphql');
-// const Book = require('../models/book');
+// const Book = require('../models/book'); // COuld use typescript?
 // const Author = require('../models/Author');
 const _ = require('lodash');
 
@@ -31,28 +31,25 @@ const BookType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         genre: { type: GraphQLString },
-        // author: {
-        //     type: AuthorType,
-        //     resolve(parent, args){
-        //         var query =  db.collection('authors').doc(parent.authorId).get();
-        //         query
-        //             .then(snapshot => {
-        //                 if (snapshot.empty) {
-        //                     console.log('No matching.');
-        //                     return;
-        //                 }  
-        //                 var res = snapshot.data();//.map(doc => doc.data());
-        //                 console.log('isArray: ', Array.isArray(res));
-        //                 console.log('Return: ', res);
-        //                 return res;
-        //             })
-        //             .catch(err => {
-        //                 console.log('Error getting', err);
-        //                 return;
-        //         });
-        //         // return Author.findById(parent.authorId);
-        //     }
-        // }
+        author: {
+            type: AuthorType,
+            resolve(parent, args){
+                return db.collection('authors').doc(parent.authorId).get().then(doc =>
+                    {
+                        if (!doc.exists) {
+                            console.log('No matching doc found when finding book author');
+                            return;
+                        }
+                        result = doc.data();
+                        result.id = doc.id;
+                        return result;
+                    })
+                    .catch(err => {
+                        console.log('Error getting', err);
+                        return;
+                });
+            }
+        }
     })
 });
 
@@ -65,69 +62,31 @@ const AuthorType = new GraphQLObjectType({
         books: {
             type: new GraphQLList(BookType),
             resolve(parent, args){
-                var query =  db.collection('books').doc(parent.id).get();
-                query
-                    .then(snapshot => {
-                        if (snapshot.empty) {
-                            console.log('No matching.');
-                            return;
-                        }  
-                        var res = snapshot.docs.map(doc => doc.data());
-                        console.log('isArray: ', Array.isArray(res));
-                        console.log('Return: ', res);
-                        return res;
-                    })
-                    .catch(err => {
-                        console.log('Error getting', err);
+                return db.collection('books').where("authorId", "==", parent.id).get().then(snapshot => {
+                    if (snapshot.empty) {
+                        console.log('No matching books found for author ID');
                         return;
+                    }  
+                    var res = snapshot.docs.map((doc) => {
+                        var item = doc.data();
+                        item.id = doc.id;
+                        return item;
+                    });
+                    return res;
+                })
+                .catch(err => {
+                    console.log('Error getting', err);
+                    return;
                 });
-                // return Book.find({ authorId: parent.id });
             }
         }
     })
 });
 
-// const testBook = {
-//     id: 34,
-//     name: "24242424",
-//     genre: "532523465437",
-// };
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        // book: {
-        //     type: BookType,
-        //     args: { name: { type: GraphQLString } },
-        //     resolve(parent, args){
-        //         return db.collection("books").where("name", "==", args.name).get().then(snapshot => 
-        //             {
-        //                 if (snapshot.empty) {
-        //                     console.log('No matching.');
-        //                     return;
-        //                 }
-        //                 // return testBook;
-        //                 // console.log("SNAPSHOT = ", snapshot);
-        //                 var res = {};
-        //                 console.log("SNAPSHOT : ", snapshot);
-        //                 var res = snapshot.forEach((doc) => { 
-        //                     var item = doc.data();
-        //                     item.id = doc.id;
-        //                     console.log(item);
-        //                     res = testBook;
-        //                 });
-        //                 console.log(">>>", res);
-        //                 return res;
-        //             })
-        //             .catch(err => {
-        //                 console.log('Error getting', err);
-        //                 return;
-        //             });
-        //             // https://stackoverflow.com/questions/57737574/how-to-query-firestore-for-graphql-resolver
-        //     }
-        // },
-
-
         book: {
             type: BookType,
             args: { id: { type: GraphQLID } },
@@ -171,45 +130,41 @@ const RootQuery = new GraphQLObjectType({
         books: {
             type: new GraphQLList(BookType),
             resolve(parent, args){
-                var query = db.collection('books').get();
-                query
-                    .then(snapshot => {
+                return db.collection('books').get().then(snapshot => 
+                    {
                         if (snapshot.empty) {
                             console.log('No matching.');
                             return;
                         }  
                         var res = snapshot.docs.map(doc => doc.data());
-                        console.log('isArray: ', Array.isArray(res));
-                        console.log('Return: ', res);
+                        return res;
+                    })
+                    .catch(err => {
+                        console.log('Error getting all books', err);
+                        return;
+                    });
+            }
+        },
+        authors: {
+            type: new GraphQLList(AuthorType),
+            resolve(parent, args){
+                return db.collection('authors').get().then(snapshot => 
+                    {
+                        if (snapshot.empty) {
+                            console.log('No matching.');
+                            return;
+                        }  
+                        var res = snapshot.docs.map(doc => {
+                            var item = doc.data();
+                            item.id = doc.id;
+                            return item;
+                        });
                         return res;
                     })
                     .catch(err => {
                         console.log('Error getting', err);
                         return;
                     });
-                // return Book.find({});
-            }
-        },
-        authors: {
-            type: new GraphQLList(AuthorType),
-            resolve(parent, args){
-                var query = db.collection('authors').get();
-                query
-                    .then(snapshot => {
-                        if (snapshot.empty) {
-                            console.log('No matching.');
-                            return;
-                        }  
-                        var res = snapshot.docs.map(doc => doc.data());
-                        console.log('isArray: ', Array.isArray(res));
-                        console.log('Return: ', res);
-                        return res;
-                    })
-                    .catch(err => {
-                        console.log('Error getting', err);
-                        return;
-                });
-                // return Author.find({});
             }
         }
     }
@@ -229,7 +184,6 @@ const Mutation = new GraphQLObjectType({
                     name: args.name,
                     age: args.age
                 };
-                console.log("ADDING AUTHOR");
                 return db.collection('authors').add(author).then(resultingDoc =>
                     {
                         if (resultingDoc.exists) {
@@ -258,7 +212,6 @@ const Mutation = new GraphQLObjectType({
                     genre: args.genre,
                     authorId: args.authorId
                 };
-                console.log("ADDING BOOK");
                 return db.collection('books').add(book).then(resultingDoc =>
                     {
                         if (resultingDoc.exists) {
