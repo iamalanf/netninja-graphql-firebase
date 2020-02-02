@@ -1,54 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { graphql } from 'react-apollo';
 import { getAuthorsQuery } from '../queries/queries';
 
 
 const AddBook = (props) => {
 
-    const displayAuthors = () => {
-        var data = props.data;
-        if(data.loading){
-            return(
-                <option disabled>Loading Authors...</option>
-            )
-        }
-        else{
-            return(
-                data.authors.map(author => {
-                    return(
-                      <option key={author.id} value={author.id}>{author.name}</option>
-                    )
-                })
-            )
-        }
-    }
-    
-    
-    return(
-        <form id="add-book">
+  const [name, setName] = useState("");
+  const [genre, setGenre] = useState("");
+  const [authorId, setAuthorId] = useState("");
 
-            <div className="input-field">
-                <label>Book name:</label>
-                <input type="text"/>
-            </div>
+  const displayAuthors = () => {
+      var data = props.data;
+      if(data.loading){
+          return(
+              <option disabled>Loading Authors...</option>
+          )
+      }
+      else{
+          return(
+              data.authors.map(author => {
+                  return(
+                    <option key={author.id} value={author.id}>{author.name}</option>
+                  )
+              })
+          )
+      }
+  }
 
-            <div className="input-field">
-                <label>Genre:</label>
-                <input type="text"/>
-            </div>
+  const submitForm = (e) => {
+    e.preventDefault();
+    console.log("State = ", name, " ", genre, " ", authorId)
+  }
+     
+  return(
+      <form id="add-book" onSubmit={ (e) => {submitForm(e)}}>
 
-            <div className="input-field">
-                <label>Author:</label>
-                <select>
-                    <option>Select author</option>
-                    {displayAuthors()}
-                </select>
-            </div>
+          <div className="input-field">
+              <label>Book name:</label>
+              <input type="text" onChange={ (e) => setName(e.target.value)}/>
+          </div>
 
-            <button>+</button>
+          <div className="input-field">
+              <label>Genre:</label>
+              <input type="text" onChange={ (e) => {setGenre(e.target.value)}} />
+          </div>
 
-        </form>
-    )
+          <div className="input-field">
+              <label>Author:</label>
+              <select onChange = { (e) => {setAuthorId(e.target.value)}}>
+                  <option>Select author</option>
+                  {displayAuthors()}
+              </select>
+          </div>
+
+          <button>+</button>
+
+      </form>
+  )
 }
 
 export default graphql(getAuthorsQuery)(AddBook);
