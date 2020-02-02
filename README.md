@@ -10,18 +10,17 @@ Feel free to play with this project to begin with but I may change the firestore
 
 ## Setting up your Firebase Project
 
-Create a project folder
+* Create a project folder
 
-Make sure you have firebase cli installed
+* Make sure you have firebase cli installed
+    * If also planning to do a front end would suggest creating a server folder within project folder
 
-If also planning to do a front end would suggest creating a server folder within project folder
-
-In server folder hit firebase init 
-> Create new firebase project with your credentials
-> Would suggest only initialising functions to begin with ( I used javascript not typescript to keep things simple )
-> Did not set up Firestore here as defaulted to Google Cloud platform not Firebase
-> Once Firebase project created go to console > database and create a Firestore. Would suggest public rules to begin with (this is just a demo project but if using in production change this!)
-> Copy in the functions code from this repo and emulate with
+* In server folder hit firebase init 
+* Create new firebase project with your credentials
+* Would suggest only initialising functions to begin with ( I used javascript not typescript to keep things simple )
+* Did not set up Firestore here as defaulted to Google Cloud platform not Firebase
+* Once Firebase project created go to console > database and create a Firestore. Would suggest public rules to begin with (this is just a demo project but if using in production change this!)
+* Copy in the functions code from this repo and emulate with
 
 ### Working Locally
 
