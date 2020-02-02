@@ -30,8 +30,13 @@ const AddBook = (props) => {
 
   const submitForm = (e) => {
     e.preventDefault();
-    console.log("State = ", name, " ", genre, " ", authorId);
-    props.addBookMutation();
+    props.addBookMutationName({
+      variables: {
+        name: name,
+        genre: genre,
+        authorId: authorId
+      }
+    });
   }
      
   return(
