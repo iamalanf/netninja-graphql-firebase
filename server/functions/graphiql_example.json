@@ -1,0 +1,82 @@
+mutation addAuthor{
+  addAuthor(name: "John McEnroe", age: 60) {
+    name
+    age
+    id
+  }
+}
+
+
+mutation addBook{
+  addBook(name: "Seriously", genre: "Autobiography", authorId: "SSKj5cGeBGtwdwtUooQ9"){ # WILL NEED TO UPDATE ID
+    name
+    genre
+    id
+    # author{
+    #   name
+    # }
+  }
+}
+
+query getBookById{
+  book(id: "Bt3YfzhNn24PBfLRZ7El"){ # WILL NEED TO UPDATE ID
+    name
+    id
+    genre
+    author{
+      id
+      name
+      age
+    }
+  }
+}
+
+query getAuthorById{
+  author(id: "SSKj5cGeBGtwdwtUooQ9"){ # WILL NEED TO UPDATE ID
+    name
+    age
+    id
+    books {
+      id
+      name
+      genre
+    }
+  }
+}
+
+query getAllBooks{
+  books{
+    name
+    genre
+    author {
+      name
+      age
+    }
+  }
+}
+
+query getAllAuthors{
+  authors{
+    name
+    age
+    books {
+      name
+    }
+  }
+}
+
+query sillyNestedQuery{
+  authors{
+    name
+      books{
+        name
+        author {
+          name
+          age
+          books {
+            genre
+          }
+        }
+      }
+  }
+}
