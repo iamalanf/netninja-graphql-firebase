@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { graphql } from 'react-apollo';
-import { getAuthorsQuery } from '../queries/queries';
+import { graphql } from 'react-apollo'; // Compose no longer in Apollo 3, was copy of lodash's flowright anyway according to docs and stackE https://stackoverflow.com/questions/57445294/compose-not-exported-from-react-apollo
+import { flowRight as compose } from 'lodash';
+import { getAuthorsQuery, addBookMutation } from '../queries/queries';
 
 
 const AddBook = (props) => {
@@ -10,7 +11,7 @@ const AddBook = (props) => {
   const [authorId, setAuthorId] = useState("");
 
   const displayAuthors = () => {
-      var data = props.data;
+      var data = props.getAuthorsQueryName;
       if(data.loading){
           return(
               <option disabled>Loading Authors...</option>
@@ -29,7 +30,8 @@ const AddBook = (props) => {
 
   const submitForm = (e) => {
     e.preventDefault();
-    console.log("State = ", name, " ", genre, " ", authorId)
+    console.log("State = ", name, " ", genre, " ", authorId);
+    props.addBookMutation();
   }
      
   return(
@@ -59,4 +61,7 @@ const AddBook = (props) => {
   )
 }
 
-export default graphql(getAuthorsQuery)(AddBook);
+export default compose(
+  graphql(getAuthorsQuery, {name: "getAuthorsQueryName"}),
+  graphql(addBookMutation, {name: "addBookMutationName"})
+)(AddBook);
