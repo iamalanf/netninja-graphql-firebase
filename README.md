@@ -4,6 +4,8 @@ This is based on the [graphql tutorial](https://www.youtube.com/playlist?list=PL
 
 The Net Ninja tutorial was based on a MongoDB server here instead is a firestore server hosted using Firebase functions.
 
+The front end is also slightly updated, now using all functional React components and hooks etc..
+
 # Initial Setup
 
 Feel free to play with this project to begin with but I may change the firestore security rules leading to everything failing to write. In which case you will need to initialise your own Firebase project. Code snippets from this repo can be used to get you going quickly. 
