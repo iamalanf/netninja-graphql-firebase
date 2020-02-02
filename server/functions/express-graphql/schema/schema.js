@@ -148,7 +148,11 @@ const RootQuery = new GraphQLObjectType({
               console.log("No matching.");
               return;
             }
-            var res = snapshot.docs.map(doc => doc.data());
+            var res = snapshot.docs.map(doc => {
+              var item = doc.data();
+              item.id = doc.id;
+              return item;
+            });
             return res;
           })
           .catch(err => {
