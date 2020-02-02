@@ -43,17 +43,17 @@ const AddBook = (props) => {
   return(
       <form id="add-book" onSubmit={ (e) => {submitForm(e)}}>
 
-          <div className="input-field">
+          <div className="field">
               <label>Book name:</label>
               <input type="text" onChange={ (e) => setName(e.target.value)}/>
           </div>
 
-          <div className="input-field">
+          <div className="field">
               <label>Genre:</label>
               <input type="text" onChange={ (e) => {setGenre(e.target.value)}} />
           </div>
 
-          <div className="input-field">
+          <div className="field">
               <label>Author:</label>
               <select onChange = { (e) => {setAuthorId(e.target.value)}}>
                   <option>Select author</option>
