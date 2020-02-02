@@ -59,7 +59,7 @@ const BookType = new GraphQLObjectType({
 const AuthorType = new GraphQLObjectType({
     name: 'Author',
     fields: () => ({
-        // id: { type: GraphQLID },
+        id: { type: GraphQLID },
         name: { type: GraphQLString },
         age: { type: GraphQLInt },
         books: {
@@ -135,7 +135,7 @@ const RootQuery = new GraphQLObjectType({
                 return db.collection('books').doc(args.id).get().then(doc =>
                     {
                         if (!doc.exists) {
-                            console.log('No matching doc.');
+                            console.log('No matching doc');
                             return;
                         }
                         result = doc.data();
@@ -152,31 +152,20 @@ const RootQuery = new GraphQLObjectType({
             type: AuthorType,
             args: { id: { type: GraphQLID } },
             resolve(parent, args){
-                var query = db.collection('author').doc(args.id).get();
-                query
-                    .then(snapshot => {
-                        if (snapshot.empty) {
-                            console.log('No matching.');
+                return db.collection('authors').doc(args.id).get().then(doc =>
+                    {
+                        if (!doc.exists) {
+                            console.log('No matching doc');
                             return;
-                        }  
-                        var res = snapshot.data();
-                        delete Object.assign(res, {["author"]: res["authorId"] })["authorId"];
-
-                        console.log('isArray: ', Array.isArray(res));
-                        console.log('Return: ', res);
-
-                        let book = {
-                            name: res.name,
-                            genre: res.genre,
-                            authorId: res.authorId
-                        };
-                        return book;
+                        }
+                        result = doc.data();
+                        result.id = doc.id;
+                        return result;
                     })
                     .catch(err => {
                         console.log('Error getting', err);
                         return;
                 });
-                // return Author.findById(args.id);
             }
         },
         books: {
@@ -236,16 +225,24 @@ const Mutation = new GraphQLObjectType({
                 age: { type: GraphQLInt }
             },
             resolve(parent, args){
-                // let author = new Author({
-                //     name: args.name,
-                //     age: args.age
-                // });
                 let author = {
                     name: args.name,
                     age: args.age
                 };
-                db.collection('authors').add(author);
-                return author;//.save();
+                console.log("ADDING AUTHOR");
+                return db.collection('authors').add(author).then(resultingDoc =>
+                    {
+                        if (resultingDoc.exists) {
+                            console.log('Document already exists when adding author!');
+                            return;
+                        }
+                        author.id = resultingDoc.id;
+                        return author;
+                    })
+                    .catch(err => {
+                        console.log('Error adding author', err);
+                        return;
+                    });
             }
         },
         addBook: {
@@ -253,21 +250,28 @@ const Mutation = new GraphQLObjectType({
             args: {
                 name: { type: new GraphQLNonNull(GraphQLString) },
                 genre: { type: new GraphQLNonNull(GraphQLString) },
-                // authorId: { type: new GraphQLNonNull(GraphQLID) }
+                authorId: { type: new GraphQLNonNull(GraphQLID) }
             },
             resolve(parent, args){
-                // let book = new Book({
-                //     name: args.name,
-                //     genre: args.genre,
-                //     authorId: args.authorId
-                // });
                 let book = {
                     name: args.name,
                     genre: args.genre,
-                    // authorId: args.authorId
+                    authorId: args.authorId
                 };
-                db.collection('books').add(book); //TODO: could return docID
-                return book;//.save();
+                console.log("ADDING BOOK");
+                return db.collection('books').add(book).then(resultingDoc =>
+                    {
+                        if (resultingDoc.exists) {
+                            console.log('Document already exists when adding book!');
+                            return;
+                        }
+                        book.id = resultingDoc.id;
+                        return book;
+                    })
+                    .catch(err => {
+                        console.log('Error adding book', err);
+                        return;
+                    });
             }
         }
     }
