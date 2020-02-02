@@ -10,7 +10,7 @@ Feel free to play with this project to begin with but I may change the firestore
 
 ## Setting up your Firebase Project
 
-* Create a project folder
+* Create a project folder, do not clone this repo, work from a base
 
 * Make sure you have firebase cli installed
     * If also planning to do a front end would suggest creating a server folder within project folder
@@ -20,7 +20,7 @@ Feel free to play with this project to begin with but I may change the firestore
 * Would suggest only initialising functions to begin with ( I used javascript not typescript to keep things simple )
 * Did not set up Firestore here as defaulted to Google Cloud platform not Firebase
 * Once Firebase project created go to console > database and create a Firestore. Would suggest public rules to begin with (this is just a demo project but if using in production change this!)
-* Copy in the functions code from this repo and emulate with
+* Copy in the functions code (`index.js`, and code in `express-graphql` folder) from this repo and emulate or deploy..
 
 ### Working Locally
 
@@ -49,7 +49,7 @@ Depending on project settings may need firebase key. Go to firebase console > pr
 
 I put my key in `functions` folder and added to `.gitignore`. Path in `schema.js` will need to be updated depending on location. 
 
-Would not add key to source control!
+Would not add key to source control as a file. Would put as secret!
 
 
 
