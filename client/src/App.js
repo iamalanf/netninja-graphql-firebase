@@ -8,7 +8,8 @@ import AddBook from './components/addBook';
 
 // Apollo client setup
 const client = new ApolloClient({
-  uri: 'http://localhost:5001/firebase-netninja-graphql/us-central1/graphiql',
+  // uri: 'http://localhost:5001/firebase-netninja-graphql/us-central1/graphiql', // emulator
+  uri: 'https://us-central1-firebase-netninja-graphql.cloudfunctions.net/graphiql', // production
 })
 
 function App() {
