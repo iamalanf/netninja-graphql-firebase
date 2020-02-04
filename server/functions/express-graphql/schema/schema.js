@@ -2,13 +2,14 @@ const admin = require("firebase-admin");
 const graphql = require("graphql");
 const _ = require("lodash");
 
-const serviceAccount = require("../../firebase_key.json");
+const serviceAccount = require("../../../../firebase_key.json");
 
 // Get the following from firebase console > project settings > service accounts > download json key
 // See README for more details
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://fir-netninja-graphql.firebaseio.com"
+  // databaseURL: "https://fir-netninja-graphql.firebaseio.com" // emulator
+  databaseURL: "https://us-central1-firebase-netninja-graphql.cloudfunctions.net/graphiql" // production
 });
 
 let db = admin.firestore();
@@ -41,7 +42,7 @@ const BookType = new GraphQLObjectType({
               console.log("No matching doc found when finding book author");
               return;
             }
-            result = doc.data();
+            let result = doc.data();
             result.id = doc.id;
             return result;
           })
