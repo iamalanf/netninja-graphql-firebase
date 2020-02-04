@@ -99,6 +99,52 @@ module.exports = {
         return results;
       }
     },
+    Mutation: {
+        addBook : async (_, {name, genre, authorId}) => {
+            let bookToAdd = {
+                name: name,
+                genre: genre,
+                authorId: authorId
+            };
+            console.log("ADDDING BOOK. ", bookToAdd);
+            const results = await db.collection("books") // TODO: would like collection names to be constant to avoid error
+                .add(bookToAdd)
+                .then(resultingDoc => {
+                    if(resultingDoc.exists) {
+                        console.log("Document already exists when adding book!")
+                        return;
+                    }
+                    bookToAdd.id = resultingDoc.id;
+                    return bookToAdd;
+                })
+                .catch(err => {
+                    console.log("Error adding book. Err: ", err);
+                    return;
+                });
+            return results
+        },
+        addAuthor : async (_, {name, age}) => {
+            let authorToAdd = {
+                name: name,
+                age: age,
+            };
+            const results = await db.collection("authors")
+                .add(authorToAdd)
+                .then(resultingDoc => {
+                    if(resultingDoc.exists) {
+                        console.log("Document already exists when adding author!")
+                        return;
+                    }
+                    authorToAdd.id = resultingDoc.id;
+                    return authorToAdd;
+                })
+                .catch(err => {
+                    console.log("Error adding book. Err: ", err);
+                    return;
+                });
+            return results
+        }
+    },
     Book: {
         author: async ({authorId}) => {
             const results = await db.collection("authors")
