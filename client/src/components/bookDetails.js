@@ -1,6 +1,31 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
 import { getBookQuery } from '../queries/queries';
+import styled from 'styled-components';
+
+const StyledBookDetails = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: #AD1457;
+  padding: 30px;
+  overflow: auto;}
+  color: #fff;
+`
+
+const StyledRelatedBookItem = styled.li`
+  display: inline-block;
+  margin: 12px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid white;
+  box-shadow: 1px 2px 3px rgba(0,0,0,0.3);
+  cursor: pointer;
+  color: white;   
+`
+// TODO: inerit from book item but change colour
 
 const BookDetails = (props) => {
 
@@ -17,7 +42,7 @@ const BookDetails = (props) => {
                         {
                             book.author.books.map(x => {
                                 return(
-                                    <li key={x.id}>{x.name}</li>
+                                    <StyledRelatedBookItem key={x.id}>{x.name}</StyledRelatedBookItem>
                                 )
                             })
                         }
@@ -31,9 +56,9 @@ const BookDetails = (props) => {
     }
 
     return(
-        <div id="book-details">
+        <StyledBookDetails>
             {displayBookDetails()}
-        </div>
+        </StyledBookDetails>
     )
 }
 
