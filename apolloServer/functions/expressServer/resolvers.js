@@ -1,7 +1,7 @@
 const admin = require("firebase-admin");
 const _ = require("lodash");
 
-const serviceAccount = require("../../../firebase_key.json");
+const serviceAccount = require("./firebase_key.json");
 
 // Get the following from firebase console > project settings > service accounts > download json key
 // See README for more details
