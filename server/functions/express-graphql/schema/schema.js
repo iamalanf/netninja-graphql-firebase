@@ -73,8 +73,8 @@ const AuthorType = new GraphQLObjectType({
               console.log("No matching books found for author ID");
               return;
             }
-            var res = snapshot.docs.map(doc => {
-              var item = doc.data();
+            const res = snapshot.docs.map(doc => {
+              let item = doc.data();
               item.id = doc.id;
               return item;
             });
@@ -105,7 +105,7 @@ const RootQuery = new GraphQLObjectType({
               console.log("No matching doc");
               return;
             }
-            result = doc.data();
+            let result = doc.data();
             result.id = doc.id;
             return result;
           })
@@ -128,7 +128,7 @@ const RootQuery = new GraphQLObjectType({
               console.log("No matching doc");
               return;
             }
-            result = doc.data();
+            let result = doc.data();
             result.id = doc.id;
             return result;
           })
@@ -149,8 +149,8 @@ const RootQuery = new GraphQLObjectType({
               console.log("No matching.");
               return;
             }
-            var res = snapshot.docs.map(doc => {
-              var item = doc.data();
+            const res = snapshot.docs.map(doc => {
+              let item = doc.data();
               item.id = doc.id;
               return item;
             });
@@ -173,8 +173,8 @@ const RootQuery = new GraphQLObjectType({
               console.log("No matching.");
               return;
             }
-            var res = snapshot.docs.map(doc => {
-              var item = doc.data();
+            const res = snapshot.docs.map(doc => {
+              let item = doc.data();
               item.id = doc.id;
               return item;
             });
